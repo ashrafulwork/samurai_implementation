@@ -65,8 +65,8 @@ Extract frames from an input video for processing:
 import cv2
 import os
 
-video_path = "/content/happy.mp4"  
-output_folder = "/content/lmao/frames"
+video_path = "/content/video.mp4"  # Change this to your video path
+output_folder = "/content/frames"  # Change this to your desired output folder
 os.makedirs(output_folder, exist_ok=True)
 
 cap = cv2.VideoCapture(video_path)
@@ -90,7 +90,7 @@ Samurai requires frames to be numbered properly (e.g., `0001.jpg` instead of `fr
 ```python
 import os
 
-frames_folder = "/content/lmao/frames"
+frames_folder = "/content/frames"  # Change this to your frames folder
 
 for filename in os.listdir(frames_folder):
     if filename.startswith("frame_") and filename.endswith(".jpg"):
@@ -107,7 +107,7 @@ Before proceeding, confirm that the video loads correctly:
 ```python
 import cv2
 
-video_path = "/content/happy.mp4"
+video_path = "/content/video.mp4"  # Change this to your video path
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
@@ -134,9 +134,9 @@ Use YOLOv8 to detect objects in the first frame and extract the bounding box:
 import cv2
 from ultralytics import YOLO
 
-model = YOLO("yolov8n.pt")  # 'yolov8s.pt' for better accuracy
+model = YOLO("yolov8n.pt")  # Change model as needed
 
-video_path = "/content/happy.mp4"
+video_path = "/content/video.mp4"  # Change this to your video path
 cap = cv2.VideoCapture(video_path)
 ret, frame = cap.read()
 cap.release()
@@ -147,17 +147,17 @@ if not ret:
 
 results = model(frame)
 
-PERSON_CLASS_ID = 0  # Class ID for "person" in COCO dataset
+OBJECT_CLASS_ID = 2  # Change this to the desired object class ID
 
 bbox = None
 for detection in results[0].boxes.data:
     x1, y1, x2, y2, conf, cls = detection.tolist()
-    if int(cls) == PERSON_CLASS_ID:
+    if int(cls) == OBJECT_CLASS_ID:
         bbox = (int(x1), int(y1), int(x2), int(y2))
         break  
 
 if bbox is None:
-    print("No person detected in the first frame.")
+    print("No object detected in the first frame.")
     exit()
 
 # Save the bounding box
@@ -174,49 +174,36 @@ Run Samurai with the detected bounding box file:
 
 ```bash
 !python '/content/samurai_implementation/scripts/demo.py' \
-  --video_path '/content/lmao/frames' \
+  --video_path '/content/frames' \
   --txt_path '/content/samurai_implementation/bbox.txt' \
-  --video_output_path '/content/zero2.mp4'
+  --video_output_path '/content/output.mp4'  # Change this to your desired output path
 ```
 
 ## Issues Faced & Solutions
 
 ### 1. Incorrect Bounding Box Format
-**Issue:** Initially, the bounding box file (`bbox.txt`) was in an incorrect format, causing Samurai to fail.
-
-**Solution:** The correct format is:
-
-```
-x_min,y_min,x_max,y_max
-```
-
-Fixed by correctly extracting the bounding box using YOLO.
+**Solution:** Ensure the correct format: `x_min,y_min,x_max,y_max`.
 
 ### 2. Wrong Object Being Tracked
-**Issue:** Samurai was tracking unintended objects because the bounding box file did not specify the object type.
-
-**Solution:** Modified the YOLO detection script to explicitly track only the person class.
+**Solution:** Change the class ID in the YOLO detection script.
 
 ### 3. Input Video Was Causing Issues
-**Issue:** Samurai was not working with certain videos due to encoding or frame rate issues.
-
-**Solution:** Changing the input video resolved the issue.
+**Solution:** Try using a different video format or re-encoding.
 
 ### 4. Bounding Boxes Were Visible in Output
-**Issue:** The output video displayed both segmentation masks and bounding boxes, while only segmentation was needed.
-
-**Solution:** Modified the Samurai script to remove bounding box visualization.
+**Solution:** Modify the Samurai script to disable bounding box visualization.
 
 ---
+
+👨‍💻 Contributors
+Special thanks to:
+
+@yangchris11
+@hananaq
+
 
 ## Acknowledgments
 - [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics)
 - [Meta's Segment Anything Model (SAM)](https://github.com/facebookresearch/segment-anything)
 - [Samurai Implementation](https://github.com/ashrafulwork/samurai_implementation)
 
-👨‍💻 Contributors
-
-Special thanks to:
-
-@yangchris11
-@hananaq
