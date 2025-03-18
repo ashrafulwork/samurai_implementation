@@ -198,8 +198,8 @@ Run Samurai with the detected bounding box file:
 👨‍💻 Contributors
 Special thanks to:
 
-@yangchris11
-@hananaq
+@yangchris11 {https://github.com/yangchris11}
+@hananaq {https://github.com/hananaq}
 
 
 ## Acknowledgments
