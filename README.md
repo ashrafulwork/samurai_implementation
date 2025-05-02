@@ -1,4 +1,4 @@
-I have share my implementation right here : https://github.com/ashrafulwork/samurai_implementation/tree/master/how_to_implement
+I have shared my implementation right here : https://github.com/ashrafulwork/samurai_implementation/tree/master/how_to_implement
 
 <div align="center">
 <img align="left" width="100" height="100" src="https://github.com/user-attachments/assets/1834fc25-42ef-4237-9feb-53a01c137e83" alt="">
